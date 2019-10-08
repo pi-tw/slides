@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Peter Lu">
+  <title>asynccontextmanager for Python 3.7</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/css/reveal.css">
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="reveal.js/css/theme/black.css" id="theme">
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="reveal.js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+  <h1 class="title">asynccontextmanager for Python 3.7</h1>
+  <p class="subtitle">PyCon Taiwan 2019</p>
+  <p class="author">Peter Lu</p>
+</section>
+
+<section id="asyncio" class="slide level2">
+<h2>asyncio</h2>
+<ul>
+<li class="fragment">Concurrency in a Single Thread</li>
+<li class="fragment">Run Tasks (wrapped coroutines) in an event loop Ref: <a href="https://en.wikipedia.org/wiki/Global_interpreter_lock">GIL</a></li>
+</ul>
+</section>
+<section id="sample-code" class="slide level2">
+<h2>Sample Code</h2>
+<figure>
+<img src="https://i.imgur.com/2Vv4vm2m.png" />
+</figure>
+</section>
+<section id="context-manager" class="slide level2">
+<h2>Context Manager</h2>
+<ul>
+<li class="fragment">Allow you to allocate and release resources precisely when you want to.</li>
+</ul>
+</section>
+<section id="block-io" class="slide level2">
+<h2>Block I/O</h2>
+<figure>
+<img src="https://i.imgur.com/7EtGmsy.png" />
+</figure>
+</section>
+<section id="context-manager-1" class="slide level2">
+<h2>Context Manager</h2>
+<ul>
+<li class="fragment">Allow you to allocate and release resources precisely when you want to.</li>
+<li class="fragment">Could implement it into 2 types:
+<ul>
+<li class="fragment">Class
+<ul>
+<li class="fragment">Implement <strong>enter</strong> method and <strong>exit</strong> method.</li>
+</ul></li>
+<li class="fragment">Generator
+<ul>
+<li class="fragment">Add the decorator <span class="citation" data-cites="contextlib.contextmanager">@contextlib.contextmanager</span> onto the generator’s definition.</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="context-manager-as-a-class" class="slide level2">
+<h2>Context Manager as a Class</h2>
+<pre><code>class File(object):
+    def __init__(self, file_name, method):
+        self.file_obj = open(file_name, method)
+    def __enter__(self):
+        return self.file_obj
+    def __exit__(self, type, value, traceback):
+        print(&quot;Exception has been handled&quot;)
+        self.file_obj.close()
+        return True
+
+with File(&#39;demo.txt&#39;, &#39;w&#39;) as opened_file:
+    opened_file.undefined_function()
+
+# Output: Exception has been handled</code></pre>
+</section>
+<section id="context-manager-as-a-generator" class="slide level2">
+<h2>Context Manager as a Generator</h2>
+<pre><code>from contextlib import contextmanager
+
+@contextmanager
+def open_file(name):
+    f = open(name, &#39;w&#39;)
+    yield f
+    f.close()
+
+with open_file(&#39;some_file&#39;) as f:
+    f.write(&#39;hola!&#39;)</code></pre>
+</section>
+<section id="asynccontextmanager" class="slide level2">
+<h2>asynccontextmanager?</h2>
+<ul>
+<li class="fragment">Asyncio + ContextManager as a Generator</li>
+<li class="fragment">Asyncio + ContextManager as a Class</li>
+</ul>
+</section>
+<section id="asynccontextmanager-1" class="slide level2">
+<h2>asynccontextmanager</h2>
+<ul>
+<li class="fragment">Run/Use multiple resources with contextmanager simultaneously
+<ul>
+<li class="fragment">Decorator <span class="citation" data-cites="asynccontextmanager">@asynccontextmanager</span>
+<ul>
+<li class="fragment">Asyncio + ContextManager as a Generator</li>
+</ul></li>
+<li class="fragment">Class with <strong>aenter</strong> and <strong>aexit</strong> method
+<ul>
+<li class="fragment">Asyncio + ContextManager as a Class</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="asynccontextmanager-as-a-generator" class="slide level2">
+<h2>asynccontextmanager as a Generator</h2>
+<p><a href="https://i.imgur.com/DnOZbWnl.png"><img src="https://i.imgur.com/DnOZbWnm.png" /></a></p>
+</section>
+<section id="asynccontextmanager-as-a-class" class="slide level2">
+<h2>asynccontextmanager as a Class</h2>
+<figure>
+<img src="https://i.imgur.com/RTMD84Wm.png" />
+</figure>
+</section>
+<section id="learn-more" class="slide level2">
+<h2>Learn More</h2>
+<ul>
+<li class="fragment">contextlib</li>
+<li class="fragment">ExitStack &amp; AsyncExitStack(new in 3.7)
+<ul>
+<li class="fragment">https://www.rath.org/on-the-beauty-of-pythons-exitstack.html</li>
+</ul></li>
+<li class="fragment">nullcontext (new in 3.7)</li>
+<li class="fragment">other new features on asyncio in 3.7</li>
+<li class="fragment">async and await become keywords</li>
+<li class="fragment">asyncio.run()</li>
+</ul>
+</section>
+<section id="learn-more-1" class="slide level2">
+<h2>Learn More</h2>
+<ul>
+<li class="fragment">Support for Context Variable (PEP-567, new in 3.7)</li>
+<li class="fragment">Support for loop.call_soon()/loop.call_later()/loop.call_at()</li>
+<li class="fragment">Shortcuts (asyncio.create_task(), asyncio.current_task(), asyncio.all_task(), etc.)</li>
+<li class="fragment">Network/Socket/Streaming (improvement in BufferedProtocol, asyncio.Server, etc.)</li>
+</ul>
+</section>
+<section id="references" class="slide level2">
+<h2>References</h2>
+<ul>
+<li class="fragment">https://www.python.org/dev/peps/pep-0343/</li>
+<li class="fragment">https://docs.python.org/3/library/contextlib.html</li>
+<li class="fragment">https://docs.python.org/3/library/asyncio-task.html</li>
+<li class="fragment">https://docs.python.org/3/whatsnew/3.7.html#whatsnew37-asyncio</li>
+<li class="fragment">http://book.pythontips.com/en/latest/context_managers.html</li>
+<li class="fragment">https://stackoverflow.com/questions/37433157/asynchronous-context-manager</li>
+</ul>
+</section>
+<section id="thank-you" class="slide level2">
+<h2>Thank You</h2>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/lib/js/head.min.js"></script>
+  <script src="reveal.js/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display a presentation progress bar
+        progress: false,
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
+              { src: 'reveal.js/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>
