@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Peter Lu">
+  <title>Pandoc</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/css/reveal.css">
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="reveal.js/css/theme/black.css" id="theme">
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="reveal.js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+  <h1 class="title">Pandoc</h1>
+  <p class="subtitle">COSCUP 2019</p>
+  <p class="author">Peter Lu</p>
+</section>
+
+<section id="跨平台文件格式轉換工具" class="slide level2">
+<h2>跨平台文件格式轉換工具</h2>
+</section>
+<section id="支援格式" class="slide level2">
+<h2>支援格式</h2>
+<ul>
+<li class="fragment">Markdown (including CommonMark and GitHub-flavored Markdown)</li>
+<li class="fragment">HTML5</li>
+<li class="fragment">EPUB version 2 or 3</li>
+<li class="fragment">LaTeX</li>
+<li class="fragment">Microsoft Word docx</li>
+<li class="fragment">OpenOffice/LibreOffice ODT</li>
+<li class="fragment">Jupyter notebook (ipynb)</li>
+<li class="fragment">MediaWiki markup</li>
+<li class="fragment"><a href="https://pandoc.org/diagram.jpg">and more</a></li>
+</ul>
+</section>
+<section id="指令" class="slide level2">
+<h2>指令</h2>
+<pre><code># 顯示支援輸入格式
+$ pandoc --list-input-formats
+
+# 顯示支援輸出格式
+$ pandoc --list-output-formats
+
+# 把 markdown 轉成 docx
+$ pandoc -s -t docx test.md -o test.docx
+
+# 把 markdown 轉成 revealjs html (簡報就是用這個做的)
+$ pandoc -s --mathml -i -t revealjs test.md -o test.html</code></pre>
+</section>
+<section id="gui-介面" class="slide level2">
+<h2>GUI 介面</h2>
+<ul>
+<li class="fragment"><a href="https://github.com/niebert/PanDocElectron" class="uri">https://github.com/niebert/PanDocElectron</a></li>
+<li class="fragment"><a href="https://github.com/apaeffgen/PanConvert" class="uri">https://github.com/apaeffgen/PanConvert</a></li>
+</ul>
+</section>
+<section id="web-介面" class="slide level2">
+<h2>Web 介面</h2>
+<ul>
+<li class="fragment"><a href="https://pandoc.org/try/" class="uri">https://pandoc.org/try/</a></li>
+<li class="fragment"><a href="https://github.com/olastor/paperify" class="uri">https://github.com/olastor/paperify</a></li>
+<li class="fragment"><a href="https://github.com/maehr/typademic" class="uri">https://github.com/maehr/typademic</a></li>
+</ul>
+</section>
+<section id="資源" class="slide level2">
+<h2>資源</h2>
+<ul>
+<li class="fragment"><a href="https://pandoc.org/" class="uri">https://pandoc.org/</a></li>
+<li class="fragment"><a href="https://wizardforcel.gitbooks.io/markdown-simple-world/6.html" class="uri">https://wizardforcel.gitbooks.io/markdown-simple-world/6.html</a></li>
+<li class="fragment"><a href="https://zh.wikipedia.org/wiki/Pandoc" class="uri">https://zh.wikipedia.org/wiki/Pandoc</a></li>
+</ul>
+</section>
+<section><section id="thank-you" class="titleslide slide level1"><h1>Thank You</h1></section></section>
+    </div>
+  </div>
+
+  <script src="reveal.js/lib/js/head.min.js"></script>
+  <script src="reveal.js/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display a presentation progress bar
+        progress: false,
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
+              { src: 'reveal.js/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>
